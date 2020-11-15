@@ -9,10 +9,12 @@ public class ConsoleUserInterface implements UserInterface {
 	private Scanner scanner;
 	private AccountHolder accountHolder;
 	private Map<String, AccountHolder> accounts;
+	private DebitAccount userAccount;
 
 	public ConsoleUserInterface(Scanner scanner) {
 		this.scanner = scanner;
 		this.accounts = new HashMap<String, AccountHolder>();
+		this.userAccount = new DebitAccount();
 	}
 	
 	public void start() {
@@ -41,7 +43,6 @@ public class ConsoleUserInterface implements UserInterface {
 	}
 	
 	private void createAccount() {
-		
 		System.out.println("Please enter a username");
 		String username = scanner.nextLine();
 		System.out.println("Please enter a password");
@@ -54,6 +55,7 @@ public class ConsoleUserInterface implements UserInterface {
 		String number = scanner.nextLine();
 		System.out.println("Please enter an initial deposit ammount");
 		double deposit = scanner.nextDouble();
+		userAccount.setBalance(deposit);
 		
 		accountHolder = new AccountHolder(username, password, name, address, number, deposit);
 		accounts.put(username, accountHolder);
@@ -69,49 +71,48 @@ public class ConsoleUserInterface implements UserInterface {
 		if(accounts.containsKey(username)) {
 			accountHolder = accounts.get(username);
 			if(accountHolder.getPassword().equals(password)) {
-				
-				while(true) {
-					System.out.println("Please make a choice");
-					System.out.println("1 - Deposit");
-					System.out.println("2 - Withdraw");
-					System.out.println("3 - Balance");
-					System.out.println("4 - User information");
-					System.out.println("5 - Logout");
-					System.out.print("Please make a choice: ");
-					
-					String choice = scanner.nextLine();
-					switch(choice) {
-					case "1": 
-						System.out.println("Please enter an ammount to deposit");
-						double deposit = scanner.nextDouble();
-						accountHolder.deposit(deposit);
-						break;
-					case "2":
-						System.out.println("Please enter an ammount to withdraw");
-						double withdraw = scanner.nextDouble();
-						accountHolder.withdraw(withdraw);
-						break;
-					case "3":
-						System.out.println("Your current balance is: " + accountHolder.getBalance());
-						break;
-					case "4":
-						System.out.println(accountHolder);
-						break;
-					case "5":
-						System.exit(0);
-						break;
-					default:
-						System.out.println("Invalid option");
-							
-					}		
-				}
-				
-				
-				
+				userAccountOperations();						
 			}
 		}
 	
 	}
-
+	
+	private void userAccountOperations() {
+		while(true) {
+			System.out.println("Please make a choice");
+			System.out.println("1 - Deposit");
+			System.out.println("2 - Withdraw");
+			System.out.println("3 - Balance");
+			System.out.println("4 - User information");
+			System.out.println("5 - Logout");
+			System.out.print("Please make a choice: ");
+			
+			String choice = scanner.nextLine();
+			switch(choice) {
+			case "1": 
+				System.out.println("Please enter an ammount to deposit");
+				double deposit = scanner.nextDouble();
+				userAccount.deposit(deposit);
+				break;
+			case "2":
+				System.out.println("Please enter an ammount to withdraw");
+				double withdraw = scanner.nextDouble();
+				userAccount.withdraw(withdraw);
+				break;
+			case "3":
+				System.out.println("Your current balance is: " + userAccount.getBalance());
+				break;
+			case "4":
+				System.out.println(accountHolder);
+				break;
+			case "5":
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid option");
+					
+			}		
+		}
+	}
 
 }
